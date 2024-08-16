@@ -1,0 +1,45 @@
+# General
+bin/
+obj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.local
+
+# User-specific files (Visual Studio)
+.vs/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in[32]/
+[Oo]bj/
+[Ll]og/
+
+# NuGet Packages
+*.nupkg
+packages/
+
+# Test results
+TestResults/
+
+# Secrets and configuration
+appsettings*.json (consider using environment variables or secure storage for sensitive data)
+
+# User-specific settings
+*.userprefs
+
+# Continuous Integration
+_TeamCity*
+
+# Misc
+*.cache
+*.tmp
+*.temp
+Thumbs.db
