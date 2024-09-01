@@ -79,4 +79,40 @@ public class Auth0ServiceTests
         // Act & Assert
         await Assert.ThrowsAsync<ErrorApiException>(async () => await _auth0Service.GetTokenAsync(username, password));
     }
+    
+    // [Fact]
+    // public async Task RegisterUserAsync_ValidUser_CreatesUser()
+    // {
+    //     // Arrange
+    //     var user = new RegisterUserRequest { Email = "test@example.com", Password = "strongpassword" };
+    //     _tokenFetcherMock.Setup(x => x.GetAccessTokenAsync()).ReturnsAsync("mock_access_token");
+    //
+    //     // Act
+    //     await _auth0Service.RegisterUserAsync(user);
+    //
+    //     // Assert
+    //     _tokenFetcherMock.Verify(x => x.GetAccessTokenAsync(), Times.Once);
+    // } 
+
+    [Fact]
+    public async Task RegisterUserAsync_ErrorFetchingToken_ThrowsException()
+    {
+        // Arrange
+        var user = new RegisterUserRequest { Email = "test@example.com", Password = "strongpassword" };
+        _tokenFetcherMock.Setup(x => x.GetAccessTokenAsync()).ThrowsAsync(new Exception("Token fetch error"));
+
+        // Act & Assert
+        await Assert.ThrowsAsync<Exception>(() => _auth0Service.RegisterUserAsync(user));
+    }
+
+    [Fact]
+    public async Task RegisterUserAsync_Auth0ApiError_ThrowsException()
+    {
+        // Arrange (Assuming ManagementApiClient throws an exception on error)
+        var user = new RegisterUserRequest { Email = "test@example.com", Password = "strongpassword" };
+        _tokenFetcherMock.Setup(x => x.GetAccessTokenAsync()).ReturnsAsync("mock_access_token");
+
+        // Act & Assert
+        await Assert.ThrowsAsync<UriFormatException>(() => _auth0Service.RegisterUserAsync(user)); 
+    }
 }

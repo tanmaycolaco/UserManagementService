@@ -203,4 +203,49 @@ public class UserServiceTests
         // Act & Assert
         await Assert.ThrowsAsync<BadHttpRequestException>(() => _userService.LoginAsync(username, password));
     }
+    
+    [Fact]
+    public async Task RegisterUserAsync_MissingUsername_ThrowsBadRequest()
+    {
+        // Arrange
+        var request = new RegisterUserRequest
+        {
+            Username = "", // Missing username
+            Password = "StrongPassword123!",
+            Email = "testuser@example.com"
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BadHttpRequestException>(() => _userService.RegisterUserAsync(request));
+    }
+    
+    [Fact]
+    public async Task RegisterUserAsync_MissingPassword_ThrowsBadRequest()
+    {
+        // Arrange
+        var request = new RegisterUserRequest
+        {
+            Username = "testuser", 
+            Password = "", // Missing password
+            Email = "testuser@example.com"
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BadHttpRequestException>(() => _userService.RegisterUserAsync(request));
+    }
+
+    [Fact]
+    public async Task RegisterUserAsync_MissingEmail_ThrowsBadRequest()
+    {
+        // Arrange
+        var request = new RegisterUserRequest
+        {
+            Username = "testuser", 
+            Password = "StrongPassword123!",
+            Email = "" // Missing email
+        };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<BadHttpRequestException>(() => _userService.RegisterUserAsync(request));
+    }
 }

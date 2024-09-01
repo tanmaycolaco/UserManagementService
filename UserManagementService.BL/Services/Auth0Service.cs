@@ -12,6 +12,7 @@ public class Auth0Service: IAuth0Service
 {
     private readonly ITokenFetcher _tokenFetcher;
     private readonly IConfiguration _configuration;
+    
 
     public Auth0Service(IConfiguration configuration, ITokenFetcher tokenFetcher)
     {
@@ -29,7 +30,6 @@ public class Auth0Service: IAuth0Service
             Connection = "Username-Password-Authentication", 
             Email = user.Email,
             Password = user.Password, 
-            // Add other user metadata as needed
         };
 
         await managementApiClient.Users.CreateAsync(newUser);

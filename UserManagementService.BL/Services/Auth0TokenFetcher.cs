@@ -11,11 +11,13 @@ public class Auth0TokenFetcher : ITokenFetcher
 {
     private readonly IMemoryCache _cache;
     private readonly IConfiguration _configuration;
+    private readonly IAuthenticationApiClient _authenticationApiClient;
 
-    public Auth0TokenFetcher(IConfiguration configuration, IMemoryCache cache)
+    public Auth0TokenFetcher(IConfiguration configuration, IMemoryCache cache, IAuthenticationApiClient authenticationApiClient)
     {
         _configuration = configuration;
         _cache = cache;
+        _authenticationApiClient = authenticationApiClient;
     }
 
     public async Task<string> GetAccessTokenAsync()
@@ -31,14 +33,14 @@ public class Auth0TokenFetcher : ITokenFetcher
         var clientId = _configuration["Auth0:ClientId"];
         var clientSecret = _configuration["Auth0:ClientSecret"];
 
-        var authenticationApiClient = new AuthenticationApiClient(new Uri($"https://{domain}"));
+        //var authenticationApiClient = new AuthenticationApiClient(new Uri($"https://{domain}"));
         var tokenRequest = new ClientCredentialsTokenRequest
         {
             ClientId = clientId,
             ClientSecret = clientSecret,
             Audience = $"https://{domain}/api/v2/" 
         };
-        var tokenResponse = await authenticationApiClient.GetTokenAsync(tokenRequest);
+        var tokenResponse = await _authenticationApiClient.GetTokenAsync(tokenRequest);
 
         accessToken = tokenResponse.AccessToken;
 
@@ -72,7 +74,7 @@ public class Auth0TokenFetcher : ITokenFetcher
         var clientId = _configuration["Auth0:ClientId"];
         var clientSecret = _configuration["Auth0:ClientSecret"];
 
-        var authenticationApiClient = new AuthenticationApiClient(new Uri($"https://{domain}"));
+        //var authenticationApiClient = new AuthenticationApiClient(new Uri($"https://{domain}"));
         var request = new ResourceOwnerTokenRequest()
         {
             ClientId = clientId,
@@ -84,7 +86,7 @@ public class Auth0TokenFetcher : ITokenFetcher
             Scope = "openid profile email"
         };
 
-        var tokenResponse = await authenticationApiClient.GetTokenAsync(request);
+        var tokenResponse = await _authenticationApiClient.GetTokenAsync(request);
 
         // Cache the new token with an expiration slightly before the actual expiration
         var cacheEntryOptions = new MemoryCacheEntryOptions

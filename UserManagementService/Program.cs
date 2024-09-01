@@ -1,3 +1,4 @@
+using Auth0.AuthenticationApi;
 using UserManagementService.BL.Services;
 using UserManagementService.BL.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -58,6 +59,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuth0Service, Auth0Service>();
 builder.Services.AddScoped<ITokenFetcher, Auth0TokenFetcher>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+var domain = builder.Configuration["Auth0:Domain"];
+
+// Register the AuthenticationApiClient as a singleton or scoped service
+builder.Services.AddSingleton<IAuthenticationApiClient>(new AuthenticationApiClient(
+    new Uri($"https://{domain}")
+));
 
 builder.Services.AddAuthentication(options =>
 {
